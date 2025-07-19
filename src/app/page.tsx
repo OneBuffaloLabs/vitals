@@ -1,3 +1,4 @@
+// src/app/page.tsx
 import { ThemeToggle } from '@/components/theme-toggle';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRocket } from '@fortawesome/free-solid-svg-icons';
