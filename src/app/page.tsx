@@ -1,5 +1,14 @@
 import Image from 'next/image';
 
+// 1. Import Font Awesome packages and styles
+import { config } from '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRocket } from '@fortawesome/free-solid-svg-icons';
+
+// 2. Prevent large icons on initial load
+config.autoAddCss = false;
+
 export default function Home() {
   return (
     <div className='bg-blue-500 font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20'>
@@ -29,13 +38,8 @@ export default function Home() {
             href='https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
             target='_blank'
             rel='noopener noreferrer'>
-            <Image
-              className='dark:invert'
-              src='/vercel.svg'
-              alt='Vercel logomark'
-              width={20}
-              height={20}
-            />
+            {/* 3. Added the icon here */}
+            <FontAwesomeIcon icon={faRocket} className='w-4 h-4' />
             Deploy now
           </a>
           <a
