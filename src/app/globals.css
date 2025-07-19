@@ -1,6 +1,10 @@
+/* src/app/globals.css */
 @import 'tailwindcss';
 
-@layer base {
+/* Define all your theme variables inside a single @layer theme block.
+  This is the correct way for Tailwind v4 to recognize them.
+*/
+@layer theme {
   :root {
     /* Light Theme Variables */
     --background: 0 0% 100%;
@@ -9,15 +13,15 @@
     --card-foreground: 20 14.3% 4.1%;
     --popover: 0 0% 100%;
     --popover-foreground: 20 14.3% 4.1%;
-    --primary: 210 23% 24%; /* Custom: Indigo */
+    --primary: 210 23% 24%;
     --primary-foreground: 0 0% 98%;
     --secondary: 60 4.8% 95.9%;
     --secondary-foreground: 24 9.8% 10%;
     --muted: 60 4.8% 95.9%;
     --muted-foreground: 25 5.3% 44.7%;
-    --accent: 23 82% 51%; /* Custom: Red-Orange */
+    --accent: 23 82% 51%;
     --accent-foreground: 0 0% 98%;
-    --destructive: 4 69% 41%; /* Custom: Red */
+    --destructive: 4 69% 41%;
     --destructive-foreground: 0 0% 98%;
     --border: 20 5.9% 90%;
     --input: 20 5.9% 90%;
@@ -33,15 +37,15 @@
     --card-foreground: 60 9.1% 97.8%;
     --popover: 20 14.3% 4.1%;
     --popover-foreground: 60 9.1% 97.8%;
-    --primary: 210 23% 24%; /* Custom: Indigo */
+    --primary: 210 23% 24%;
     --primary-foreground: 0 0% 98%;
     --secondary: 12 6.5% 15.1%;
     --secondary-foreground: 60 9.1% 97.8%;
     --muted: 12 6.5% 15.1%;
     --muted-foreground: 24 5.4% 63.9%;
-    --accent: 23 82% 51%; /* Custom: Red-Orange */
+    --accent: 23 82% 51%;
     --accent-foreground: 0 0% 98%;
-    --destructive: 4 69% 41%; /* Custom: Red */
+    --destructive: 4 69% 41%;
     --destructive-foreground: 0 0% 98%;
     --border: 12 6.5% 15.1%;
     --input: 12 6.5% 15.1%;
@@ -49,6 +53,9 @@
   }
 }
 
+/*
+  Apply your base styles in a separate @layer base block.
+*/
 @layer base {
   * {
     border-color: hsl(var(--border));

@@ -34,16 +34,20 @@ export default function Home() {
           <div className='bg-card text-card-foreground p-6 rounded-lg border'>
             <h3 className='font-bold text-brand-success mb-2'>Success</h3>
             <p className='text-sm text-muted-foreground'>
-              This card uses the 'Success' color from the brand palette.
+              This card uses the &apos;Success&apos; color from the brand palette.
             </p>
           </div>
           <div className='bg-card text-card-foreground p-6 rounded-lg border'>
             <h3 className='font-bold text-brand-warning mb-2'>Warning</h3>
-            <p className='text-sm text-muted-foreground'>This card uses the 'Warning' color.</p>
+            <p className='text-sm text-muted-foreground'>
+              This card uses the &apos;Warning&apos; color.
+            </p>
           </div>
           <div className='bg-card text-card-foreground p-6 rounded-lg border'>
             <h3 className='font-bold text-brand-error mb-2'>Error</h3>
-            <p className='text-sm text-muted-foreground'>This card uses the 'Error' color.</p>
+            <p className='text-sm text-muted-foreground'>
+              This card uses the &apos;Error&apos; color.
+            </p>
           </div>
         </div>
       </main>
