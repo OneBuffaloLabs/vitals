@@ -1,19 +1,64 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Custom Brand Colors */
-  --color-vitals-primary: #34495e;
-  --color-vitals-accent: #d35400;
-  --color-vitals-success: #27ae60;
-  --color-vitals-warning: #f39c12;
-  --color-vitals-error: #c0392b;
+  --color-vitals-primary: #34495e; /* Dark Slate Grey / Charcoal */
+  --color-vitals-accent: #d35400; /* Pumpkin Orange */
+  --color-vitals-success: #27ae60; /* Emerald Green */
+  --color-vitals-warning: #f39c12; /* Orange Peel / Tangerine */
+  --color-vitals-error: #c0392b; /* Brick Red / Crimson */
+
+  --color-background-base: #f7f8f9; /* A very light, slightly cool grey */
 }
 
+/*
+ * @layer base
+ * This layer is for styling raw HTML elements. It should be kept minimal.
+ * We're setting sensible defaults that can easily be overridden by utility classes.
+ */
 @layer base {
-  body {
-    @apply bg-background text-foreground antialiased;
+  html {
+    /* Apply the base background and text colors to the entire document. */
+    @apply bg-background-base text-vitals-primary;
+
+    /* Enable smooth scrolling for anchor links. */
+    scroll-behavior: smooth;
   }
-  * {
-    @apply border-border;
+
+  body {
+    /* Apply anti-aliasing for smoother font rendering. */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a {
+    @apply text-vitals-accent no-underline transition-colors duration-200;
+    @apply hover:text-vitals-primary hover:underline;
+  }
+
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-vitals-accent rounded;
+  }
+}
+
+/*
+ * @layer components
+ * This is where we define reusable component classes by composing utilities with @apply.
+ */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md border border-transparent;
+    @apply px-4 py-2 font-semibold;
+    @apply cursor-pointer transition-colors duration-200 ease-in-out;
+    @apply focus-visible:outline-white; /* Custom focus for dark buttons */
+  }
+
+  .btn-primary {
+    @apply bg-vitals-primary text-white;
+    @apply hover:brightness-110; /* Slightly brighten the dark color on hover */
+  }
+
+  .btn-accent {
+    @apply bg-vitals-accent text-white;
+    @apply hover:brightness-95; /* Slightly darken the accent color on hover */
   }
 }
