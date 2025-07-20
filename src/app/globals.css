@@ -1,15 +1,19 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-brand-primary: #34495e;
-  --color-brand-accent: #d35400;
-  --color-brand-success: #27ae60;
-  --color-brand-warning: #f39c12;
-  --color-brand-error: #c0392b;
+  /* Custom Brand Colors */
+  --color-vitals-primary: #34495e;
+  --color-vitals-accent: #d35400;
+  --color-vitals-success: #27ae60;
+  --color-vitals-warning: #f39c12;
+  --color-vitals-error: #c0392b;
 }
 
 @layer base {
   body {
-    @apply p-10;
+    @apply bg-background text-foreground antialiased;
+  }
+  * {
+    @apply border-border;
   }
 }
