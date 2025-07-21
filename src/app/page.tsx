@@ -1,47 +1,49 @@
+'use client';
+
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRocket } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export default function Home() {
+  const [url, setUrl] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!url) {
+      // In a real app, you might show a more elegant toast or message.
+      alert('Please enter a URL to analyze.');
+      return;
+    }
+    console.log(`Analyzing URL: ${url}`);
+    // Future analysis logic will be triggered here.
+  };
+
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-background p-4'>
-      <main className='flex flex-col items-center text-center gap-8'>
-        {/* Main Heading */}
-        <h1 className='text-5xl font-bold text-foreground'>Vitals</h1>
-        <p className='text-lg text-muted-foreground max-w-md'>Welcome to the Buffalo Blueprint.</p>
+    <div className='w-full max-w-2xl text-center'>
+      <h1 className='text-4xl sm:text-5xl font-bold text-vitals-primary'>
+        Check your website&apos;s core SEO vitals.
+      </h1>
+      <p className='mt-4 text-lg text-muted-foreground'>
+        A fast, modern, and client-side analysis tool.
+      </p>
 
-        {/* Example Buttons */}
-        <div className='flex gap-4 mt-4'>
-          <button className='bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-md font-semibold transition-colors'>
-            Primary Button
-          </button>
-          <button className='bg-accent text-accent-foreground hover:bg-accent/90 px-6 py-3 rounded-md font-semibold transition-colors flex items-center gap-2'>
-            <FontAwesomeIcon icon={faRocket} className='h-4 w-4' />
-            Accent Button
-          </button>
-        </div>
-
-        {/* Example Cards */}
-        <div className='grid md:grid-cols-3 gap-4 mt-8 text-left w-full max-w-4xl'>
-          <div className='bg-card text-card-foreground p-6 rounded-lg border'>
-            <h3 className='font-bold text-vitals-success mb-2'>Success</h3>
-            <p className='text-sm text-muted-foreground'>
-              This card uses the &apos;Success&apos; color from the vitals palette.
-            </p>
-          </div>
-          <div className='bg-card text-card-foreground p-6 rounded-lg border'>
-            <h3 className='font-bold text-vitals-warning mb-2'>Warning</h3>
-            <p className='text-sm text-muted-foreground'>
-              This card uses the &apos;Warning&apos; color.
-            </p>
-          </div>
-          <div className='bg-card text-card-foreground p-6 rounded-lg border'>
-            <h3 className='font-bold text-vitals-error mb-2'>Error</h3>
-            <p className='text-sm text-muted-foreground'>
-              This card uses the &apos;Error&apos; color.
-            </p>
-          </div>
-        </div>
-      </main>
+      <form
+        onSubmit={handleSubmit}
+        className='mt-8 flex flex-col sm:flex-row items-center gap-4 w-full'>
+        <input
+          type='text'
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder='Enter a URL to analyze...'
+          className='w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-md focus:outline-none focus:border-vitals-accent transition-colors'
+        />
+        <button
+          type='submit'
+          className='btn btn-accent w-full sm:w-auto px-6 py-3 text-lg flex items-center justify-center gap-2 whitespace-nowrap'>
+          <FontAwesomeIcon icon={faSearch} className='h-5 w-5' />
+          <span>Analyze</span>
+        </button>
+      </form>
     </div>
   );
 }

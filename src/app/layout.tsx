@@ -1,20 +1,61 @@
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 // Font Awesome CSS fix
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 config.autoAddCss = false;
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+// Instantiate the Inter font
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: 'Vitals by One Buffalo Labs',
-  description: 'A client-side SEO analysis tool.',
+  title: 'Free SEO Analysis Tool | Vitals by One Buffalo Labs',
+  description:
+    "Instantly analyze your website's on-page and technical SEO with Vitals. Our free, client-side tool checks titles, headers, alt text, and more—all without storing your data.",
+  keywords: [
+    'SEO analysis tool',
+    'free SEO tool',
+    'website analyzer',
+    'SEO checker',
+    'on-page SEO',
+    'technical SEO',
+    'SEO audit',
+    'meta tag analyzer',
+    'header tag checker',
+    'alt text checker',
+    'client-side SEO',
+  ],
+  creator: 'One Buffalo Labs',
+  publisher: 'One Buffalo Labs',
+  // Open Graph and Twitter card metadata for rich social sharing
+  openGraph: {
+    title: 'Vitals | Free Client-Side SEO Analysis Tool',
+    description: "Instantly analyze your website's core SEO vitals without sharing your data.",
+    url: 'https://vitals.onebuffalolabs.com',
+    siteName: 'Vitals',
+    images: [
+      {
+        url: 'https://vitals.onebuffalolabs.com/icons/og/og-image-1200-630.png',
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Vitals | Free Client-Side SEO Analysis Tool',
+    description: "Instantly analyze your website's core SEO vitals without sharing your data.",
+    images: ['https://vitals.onebuffalolabs.com/icons/og/og-image-1200-630.png'],
+  },
 };
 
 export default function RootLayout({
@@ -25,7 +66,12 @@ export default function RootLayout({
   return (
     <html lang='en' className='dark'>
       <head />
-      <body className={`${geistSans.variable} antialiased`}>{children}</body>
+      <body
+        className={`${inter.variable} antialiased bg-background-base flex flex-col min-h-screen`}>
+        <Header />
+        <main className='flex-grow flex items-center justify-center p-4'>{children}</main>
+        <Footer />
+      </body>
     </html>
   );
 }
