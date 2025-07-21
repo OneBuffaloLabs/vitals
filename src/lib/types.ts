@@ -27,6 +27,7 @@ export interface ImageAnalysisResult {
   totalImages: number;
   altTextCount: number;
   altTextPercentage: number;
+  missingAltTextImages: string[];
   status: AnalysisStatus;
   recommendation: string;
 }

@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { ImageAnalysisResult } from '@/lib/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheckCircle,
   faExclamationCircle,
   faTimesCircle,
+  faChevronDown,
+  faChevronUp,
 } from '@fortawesome/free-solid-svg-icons';
 
 const statusConfig = {
@@ -35,6 +38,7 @@ const statusConfig = {
 };
 
 const ImageAnalysisCard = ({ result }: { result: ImageAnalysisResult }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const config = statusConfig[result.status];
 
   return (
@@ -54,6 +58,27 @@ const ImageAnalysisCard = ({ result }: { result: ImageAnalysisResult }) => {
           style={{ width: `${result.altTextPercentage}%` }}></div>
       </div>
       <p className={`mt-2 text-sm ${config.color}`}>{result.recommendation}</p>
+      {result.missingAltTextImages.length > 0 && (
+        <div className='mt-3'>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className='text-sm font-semibold text-vitals-accent'>
+            {isOpen ? 'Hide' : 'Show'} Missing ({result.missingAltTextImages.length})
+            <FontAwesomeIcon icon={isOpen ? faChevronUp : faChevronDown} className='ml-2 h-4 w-4' />
+          </button>
+          {isOpen && (
+            <ul className='mt-2 space-y-2'>
+              {result.missingAltTextImages.map((src, index) => (
+                <li
+                  key={index}
+                  className='p-2 bg-white rounded text-left text-xs font-mono text-vitals-primary break-all'>
+                  {src}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   );
 };

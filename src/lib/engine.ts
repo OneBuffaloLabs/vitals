@@ -116,7 +116,18 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   // 5. Analyze Image Alt Text
   const images = $('img');
   const totalImages = images.length;
-  const altTextCount = images.filter((_, el) => !!$(el).attr('alt')?.trim()).length;
+  let altTextCount = 0;
+  const missingAltTextImages: string[] = [];
+
+  images.each((_, el) => {
+    const alt = $(el).attr('alt');
+    if (alt && alt.trim() !== '') {
+      altTextCount++;
+    } else {
+      missingAltTextImages.push($(el).attr('src') || '');
+    }
+  });
+
   const altTextPercentage = totalImages > 0 ? (altTextCount / totalImages) * 100 : 100;
 
   let imageStatus: AnalysisResult['status'] = 'pass';
@@ -135,6 +146,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     totalImages,
     altTextCount,
     altTextPercentage,
+    missingAltTextImages,
     status: imageStatus,
     recommendation: imageRecommendation,
   };
