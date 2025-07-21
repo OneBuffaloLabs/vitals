@@ -21,10 +21,21 @@ export interface HeaderInfo {
   count: number;
 }
 
+// Represents the result of the image SEO analysis.
+export interface ImageAnalysisResult {
+  title: string;
+  totalImages: number;
+  altTextCount: number;
+  altTextPercentage: number;
+  status: AnalysisStatus;
+  recommendation: string;
+}
+
 // A collection of all the vital SEO checks for a page.
 export interface PageVitals {
   title: AnalysisResult;
   description: AnalysisResult;
   h1s: AnalysisResult;
   headers: HeaderInfo[];
+  images: ImageAnalysisResult;
 }

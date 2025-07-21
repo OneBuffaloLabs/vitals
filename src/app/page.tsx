@@ -1,3 +1,4 @@
+// src/app/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -8,6 +9,7 @@ import { PageVitals } from '../lib/types';
 import ResultCard from '@/components/ResultCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import HeaderAnalysisCard from '@/components/HeaderAnalysisCard';
+import ImageAnalysisCard from '@/components/ImageAnalysisCard';
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -92,6 +94,7 @@ export default function Home() {
             {results.headers.map((headerInfo) => (
               <HeaderAnalysisCard key={headerInfo.level} headerInfo={headerInfo} />
             ))}
+            {results.images.totalImages > 0 && <ImageAnalysisCard result={results.images} />}
           </div>
         )}
       </div>

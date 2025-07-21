@@ -3,7 +3,7 @@
  */
 
 import { load } from 'cheerio';
-import { PageVitals, AnalysisResult, HeaderInfo } from './types';
+import { PageVitals, AnalysisResult, HeaderInfo, ImageAnalysisResult } from './types';
 
 // SEO Best Practices Thresholds
 const TITLE_MIN_LENGTH = 10;
@@ -113,10 +113,37 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     }
   }
 
+  // 5. Analyze Image Alt Text
+  const images = $('img');
+  const totalImages = images.length;
+  const altTextCount = images.filter((_, el) => !!$(el).attr('alt')?.trim()).length;
+  const altTextPercentage = totalImages > 0 ? (altTextCount / totalImages) * 100 : 100;
+
+  let imageStatus: AnalysisResult['status'] = 'pass';
+  let imageRecommendation = 'All images have alt text.';
+  if (altTextPercentage < 100) {
+    imageStatus = 'warning';
+    imageRecommendation = 'Some images are missing alt text.';
+  }
+  if (totalImages > 0 && altTextCount === 0) {
+    imageStatus = 'fail';
+    imageRecommendation = 'All images are missing alt text.';
+  }
+
+  const imageResult: ImageAnalysisResult = {
+    title: 'Image Alt Text',
+    totalImages,
+    altTextCount,
+    altTextPercentage,
+    status: imageStatus,
+    recommendation: imageRecommendation,
+  };
+
   return {
     title: titleResult,
     description: descriptionResult,
     h1s: h1sResult,
     headers,
+    images: imageResult,
   };
 }
