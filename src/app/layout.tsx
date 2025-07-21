@@ -82,7 +82,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} font-sans antialiased bg-background-base flex flex-col min-h-screen`}>
         <Header />
-        <main className='flex-grow flex items-center justify-center p-4'>{children}</main>
+        <main className='flex-grow flex items-center justify-center p-4 pt-24 sm:pt-28'>
+          {children}
+        </main>
         <Footer />
       </body>
     </html>
