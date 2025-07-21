@@ -25,8 +25,8 @@ export default function ChangelogPage() {
                 <li>Core UI including Header, Footer, and URL input form.</li>
                 <li>Client-side analysis engine (`analyzeUrl`) to fetch and parse pages.</li>
                 <li>
-                  On-page analysis for `&lt;title&gt;`, `&lt;meta name="description"&gt;`, and
-                  `&lt;h1&gt;` tags.
+                  On-page analysis for `&lt;title&gt;`, `&lt;meta name=&quot;description&quot;&gt;`,
+                  and `&lt;h1&gt;` tags.
                 </li>
                 <li>`ResultCard` component to display analysis with pass/warning/fail status.</li>
                 <li>Loading and error states for the analysis process.</li>

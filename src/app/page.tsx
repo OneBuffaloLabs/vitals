@@ -7,6 +7,7 @@ import { analyzeUrl } from '../lib/engine';
 import { PageVitals } from '../lib/types';
 import ResultCard from '@/components/ResultCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import HeaderAnalysisCard from '@/components/HeaderAnalysisCard';
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -88,6 +89,9 @@ export default function Home() {
             <ResultCard result={results.title} />
             <ResultCard result={results.description} />
             <ResultCard result={results.h1s} />
+            {results.headers.map((headerInfo) => (
+              <HeaderAnalysisCard key={headerInfo.level} headerInfo={headerInfo} />
+            ))}
           </div>
         )}
       </div>

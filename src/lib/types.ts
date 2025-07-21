@@ -14,9 +14,17 @@ export interface AnalysisResult {
   recommendation: string;
 }
 
+// Represents the analysis of a specific header level (e.g., H2).
+export interface HeaderInfo {
+  level: number;
+  text: string[];
+  count: number;
+}
+
 // A collection of all the vital SEO checks for a page.
 export interface PageVitals {
   title: AnalysisResult;
   description: AnalysisResult;
   h1s: AnalysisResult;
+  headers: HeaderInfo[];
 }

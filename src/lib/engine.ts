@@ -3,7 +3,7 @@
  */
 
 import { load } from 'cheerio';
-import { PageVitals, AnalysisResult } from './types';
+import { PageVitals, AnalysisResult, HeaderInfo } from './types';
 
 // SEO Best Practices Thresholds
 const TITLE_MIN_LENGTH = 10;
@@ -93,14 +93,30 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const h1sResult: AnalysisResult = {
     title: 'H1 Tag(s)',
     text: h1Texts || null,
-    length: h1Count,
+    length: h1Count, // Using length property to store the count for H1s
     status: h1Status,
     recommendation: h1Recommendation,
   };
+
+  // 4. Analyze Header Hierarchy (H2-H6)
+  const headers: HeaderInfo[] = [];
+  for (let i = 2; i <= 6; i++) {
+    const selector = `h${i}`;
+    const elements = $(selector);
+    const texts = elements.map((_, el) => $(el).text().trim()).get();
+    if (texts.length > 0) {
+      headers.push({
+        level: i,
+        text: texts,
+        count: texts.length,
+      });
+    }
+  }
 
   return {
     title: titleResult,
     description: descriptionResult,
     h1s: h1sResult,
+    headers,
   };
 }
