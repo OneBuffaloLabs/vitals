@@ -9,13 +9,13 @@ import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 config.autoAddCss = false;
 
-// Instantiate the Inter font
 const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
+  // SEO and Core Metadata
   title: 'Free SEO Analysis Tool | Vitals by One Buffalo Labs',
   description:
     "Instantly analyze your website's on-page and technical SEO with Vitals. Our free, client-side tool checks titles, headers, alt text, and more—all without storing your data.",
@@ -34,6 +34,19 @@ export const metadata: Metadata = {
   ],
   creator: 'One Buffalo Labs',
   publisher: 'One Buffalo Labs',
+  manifest: '/manifest.json',
+
+  icons: {
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    apple: '/apple-touch-icon.png',
+  },
+
+  appleWebApp: {
+    title: 'Vitals',
+    capable: true,
+    statusBarStyle: 'default',
+  },
+
   // Open Graph and Twitter card metadata for rich social sharing
   openGraph: {
     title: 'Vitals | Free Client-Side SEO Analysis Tool',
@@ -67,7 +80,7 @@ export default function RootLayout({
     <html lang='en' className='dark'>
       <head />
       <body
-        className={`${inter.variable} antialiased bg-background-base flex flex-col min-h-screen`}>
+        className={`${inter.variable} font-sans antialiased bg-background-base flex flex-col min-h-screen`}>
         <Header />
         <main className='flex-grow flex items-center justify-center p-4'>{children}</main>
         <Footer />
