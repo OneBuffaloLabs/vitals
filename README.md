@@ -30,7 +30,7 @@ Vitals is a privacy-focused SEO tool that performs all analysis directly in your
 
 ### Branding & Identity
 
-- **Comprehensive Favicon Analysis:** Detailed checks for modern `SVG`, `PNG`, and `ICO` favicon declarations.
+- **Comprehensive Favicon Analysis:** Detailed checks for modern `SVG`, `PNG` (96x96, 192x192, 512x512), and `ICO` favicon declarations.
 - **Web App Manifest:** Parse the `manifest.json` file for PWA properties like `name`, `theme_color`, and icon sizes (192x192, 512x512).
 - **Apple Touch Icons:** Verify the declaration and accessibility of Apple-specific touch icons.
 
