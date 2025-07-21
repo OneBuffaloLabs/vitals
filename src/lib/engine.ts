@@ -2,6 +2,7 @@
  * @file The core client-side SEO analysis engine for Vitals.
  */
 
+import { load } from 'cheerio';
 import { PageVitals, AnalysisResult } from './types';
 
 // SEO Best Practices Thresholds
@@ -17,7 +18,6 @@ const DESCRIPTION_MAX_LENGTH = 160;
  */
 export async function analyzeUrl(url: string): Promise<PageVitals> {
   // We use a CORS proxy to fetch HTML content on the client-side.
-  // This is a simple solution for demonstration purposes.
   const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
 
   const response = await fetch(proxyUrl);
@@ -26,13 +26,10 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   }
   const html = await response.text();
 
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
+  const $ = load(html);
 
   // 1. Analyze Title Tag
-  const titleElement = doc.querySelector('title');
-  // Use nullish coalescing operator (??) to ensure the value is either a string or null
-  const titleText = titleElement?.textContent?.trim() ?? null;
+  const titleText = $('title').text().trim() || null;
   const titleLength = titleText?.length || 0;
   let titleStatus: AnalysisResult['status'] = 'pass';
   let titleRecommendation = 'The title length is within the recommended range.';
@@ -53,8 +50,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   };
 
   // 2. Analyze Meta Description
-  const descriptionElement = doc.querySelector('meta[name="description"]');
-  const descriptionText = descriptionElement?.getAttribute('content')?.trim() ?? null;
+  const descriptionText = $('meta[name="description"]').attr('content')?.trim() || null;
   const descriptionLength = descriptionText?.length || 0;
   let descriptionStatus: AnalysisResult['status'] = 'pass';
   let descriptionRecommendation = 'The meta description length is within the recommended range.';
@@ -78,8 +74,11 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   };
 
   // 3. Analyze H1 Tags
-  const h1Elements = Array.from(doc.querySelectorAll('h1'));
-  const h1Texts = h1Elements.map((h1) => h1.textContent?.trim() || '').join(' | ');
+  const h1Elements = $('h1');
+  const h1Texts = h1Elements
+    .map((i, el) => $(el).text().trim())
+    .get()
+    .join(' | ');
   const h1Count = h1Elements.length;
   let h1Status: AnalysisResult['status'] = 'pass';
   let h1Recommendation = 'The page has exactly one H1 tag, which is ideal.';
@@ -94,7 +93,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const h1sResult: AnalysisResult = {
     title: 'H1 Tag(s)',
     text: h1Texts || null,
-    length: h1Count, // Using length property to store the count for H1s
+    length: h1Count,
     status: h1Status,
     recommendation: h1Recommendation,
   };
