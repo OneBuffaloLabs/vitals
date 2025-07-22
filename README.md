@@ -1,9 +1,8 @@
 <div align="center">
-  <img src="/public/icons/og/og-image-1200-630.png" alt="Vitals by One Buffalo Labs"> 
+  <img src="/public/icons/og/og-image-1200-630.png" alt="Vitals by One Buffalo Labs">
 </div>
 
 <hr />
-
 
 # Vitals by One Buffalo Labs
 
@@ -37,9 +36,9 @@ Vitals is a privacy-focused SEO tool that performs all analysis directly in your
 
 ### Branding & Identity
 
-- **Comprehensive Favicon Analysis:** Detailed checks for modern `SVG`, `PNG` (96x96, 192x192, 512x512), and `ICO` favicon declarations.
-- **Web App Manifest:** Parse the `manifest.json` file for PWA properties like `name`, `theme_color`, and icon sizes (192x192, 512x512).
-- **Apple Touch Icons:** Verify the declaration and accessibility of Apple-specific touch icons.
+- **Comprehensive Favicon Analysis:** Detailed checks for declared (`<link>`) and conventional (`/favicon.ico`, `/icon.svg`) favicons in modern `SVG`, `PNG`, and `ICO` formats.
+- **Web App Manifest:** Parses the `manifest.json` file for PWA properties like `name`, `short_name`, `theme_color`, `background_color`, and required icon sizes (192x192, 512x512).
+- **Apple Touch Icons:** Verifies the declaration and accessibility of Apple-specific touch icons and the `apple-mobile-web-app-title`.
 
 ### Meta & Security
 
@@ -54,10 +53,10 @@ Vitals uses a custom color scheme designed for clarity and brand identity.
 | Role        | Color Name | Hex                                                                       |
 | ----------- | ---------- | ------------------------------------------------------------------------- |
 | **Primary** | Indigo     | `![#34495E](https://via.placeholder.com/15/34495E/000000?text=+) #34495E` |
-| **Accent**  | Red-Orange | `![#D35400](https://via.placeholder.com/15/D35400/000000?text=+) #D35400` |
+| **Accent** | Red-Orange | `![#D35400](https://via.placeholder.com/15/D35400/000000?text=+) #D35400` |
 | **Success** | Green      | `![#27AE60](https://via.placeholder.com/15/27AE60/000000?text=+) #27AE60` |
 | **Warning** | Amber      | `![#F39C12](https://via.placeholder.com/15/F39C12/000000?text=+) #F39C12` |
-| **Error**   | Red        | `![#C0392B](https://via.placeholder.com/15/C0392B/000000?text=+) #C0392B` |
+| **Error** | Red        | `![#C0392B](https://via.placeholder.com/15/C0392B/000000?text=+) #C0392B` |
 
 ## 🛠 Tech Stack
 
