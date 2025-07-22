@@ -1,8 +1,12 @@
+// --- Next ---
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
+// --- Components ---
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AnalyticsInitializer from '@/components/AnalyticsInitializer';
+// --- Styles ---
+import './globals.css';
 
 // Font Awesome CSS fix
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -90,6 +94,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <AnalyticsInitializer />
       </body>
     </html>
   );
