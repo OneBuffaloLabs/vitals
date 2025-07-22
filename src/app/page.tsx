@@ -13,6 +13,7 @@ import FileCheckCard from '@/components/FileCheckCard';
 import Tabs from '@/components/Tabs';
 import BrandingCard from '@/components/BrandingCard';
 import HeaderCheckCard from '@/components/HeaderCheckCard';
+import { logEvent } from '@/lib/analytics';
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -27,6 +28,9 @@ export default function Home() {
       return;
     }
 
+    // Log the submission event for every attempt, before analysis starts
+    logEvent('URL Analysis', 'Submit Analysis');
+
     setIsLoading(true);
     setResults(null);
     setError(null);
@@ -40,6 +44,7 @@ export default function Home() {
 
       const analysisResults = await analyzeUrl(formattedUrl);
       setResults(analysisResults);
+      logEvent('URL Analysis', 'Successful Analysis');
     } catch (err) {
       console.error(err);
       setError(
