@@ -1,3 +1,10 @@
+<div align="center">
+  <img src="/public/icons/og/og-image-1200-630.png" alt="Vitals by One Buffalo Labs"> 
+</div>
+
+<hr />
+
+
 # Vitals by One Buffalo Labs
 
 ![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)
