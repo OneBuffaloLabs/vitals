@@ -18,12 +18,22 @@ const IconCheck = ({ icon, label }: { icon: IconResult | null; label: string }) 
     }
   };
 
+  const isSquare = icon?.dimensions && icon.dimensions.width === icon.dimensions.height;
+
   return (
     <div className='flex items-center justify-between py-2 border-b'>
       <p className='text-sm text-muted-foreground'>{label}</p>
       {icon ? (
         <div className='flex items-center gap-2'>
           <span className='text-xs font-mono'>{icon.href}</span>
+          {icon.dimensions && (
+            <span
+              className={`text-xs font-mono ${
+                isSquare ? 'text-vitals-success' : 'text-vitals-error'
+              }`}>
+              ({icon.dimensions.width}x{icon.dimensions.height})
+            </span>
+          )}
           {getStatusIcon(icon.status)}
         </div>
       ) : (
@@ -42,6 +52,17 @@ const BrandingCard = ({ result }: { result: BrandingResult }) => {
           <IconCheck key={index} icon={favicon} label={`Favicon (${favicon.type || 'N/A'})`} />
         ))}
         <IconCheck icon={result.appleTouchIcon} label='Apple Touch Icon' />
+        <div className='flex items-center justify-between py-2 border-b'>
+          <p className='text-sm text-muted-foreground'>Apple Web App Title</p>
+          {result.appleMobileWebAppTitle ? (
+            <div className='flex items-center gap-2'>
+              <span className='text-xs font-mono'>{result.appleMobileWebAppTitle}</span>
+              <FontAwesomeIcon icon={faCheckCircle} className='text-vitals-success' />
+            </div>
+          ) : (
+            <FontAwesomeIcon icon={faTimesCircle} className='text-vitals-error' />
+          )}
+        </div>
         <div className='flex items-center justify-between py-2'>
           <p className='text-sm text-muted-foreground'>Web App Manifest</p>
           <FontAwesomeIcon

@@ -40,6 +40,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const $ = load(html);
   const baseUrl = new URL(url).origin;
 
+  // ... (previous analysis steps remain the same)
   // 1. Analyze Title Tag
   const titleText = $('title').text().trim() || null;
   const titleLength = titleText?.length || 0;
@@ -209,13 +210,28 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const sitemapXmlResult = await checkFile(sitemapXmlUrl, 'sitemap.xml');
 
   // 7. Branding and Icon Analysis
-  const checkIcon = async (href: string): Promise<IconResult['status']> => {
-    try {
-      const { status } = await fetchFileContent(new URL(href, baseUrl).toString());
-      return status === 200 ? 'pass' : 'fail';
-    } catch (error) {
-      return 'cors-error';
-    }
+  const getImageDimensions = (
+    imageUrl: string
+  ): Promise<{ width: number; height: number } | null> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+      img.onerror = () => resolve(null);
+      img.src = imageUrl;
+    });
+  };
+
+  const checkIcon = async (href: string): Promise<IconResult> => {
+    const fullUrl = new URL(href, baseUrl).toString();
+    const { status } = await fetchFileContent(fullUrl);
+    const dimensions = await getImageDimensions(fullUrl);
+
+    return {
+      href,
+      rel: '', // This will be filled in later
+      status: status === 200 ? 'pass' : 'fail',
+      dimensions: dimensions || undefined,
+    };
   };
 
   const favicons: IconResult[] = [];
@@ -226,27 +242,24 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     const href = $(el).attr('href');
     if (!href) continue;
     declaredIconHrefs.add(href);
-    const status = await checkIcon(href);
+    const iconResult = await checkIcon(href);
     favicons.push({
-      href,
+      ...iconResult,
       rel: $(el).attr('rel') || '',
       type: $(el).attr('type'),
       sizes: $(el).attr('sizes'),
-      status,
     });
   }
 
-  // Check for conventional, undeclared favicons
   const conventionalIcons = ['/favicon.ico', '/icon.svg'];
   for (const iconPath of conventionalIcons) {
     if (!declaredIconHrefs.has(iconPath)) {
-      const status = await checkIcon(iconPath);
-      if (status === 'pass') {
+      const iconResult = await checkIcon(iconPath);
+      if (iconResult.status === 'pass') {
         favicons.push({
-          href: iconPath,
+          ...iconResult,
           rel: 'icon (conventional)',
           type: iconPath.endsWith('.svg') ? 'image/svg+xml' : 'image/x-icon',
-          status,
         });
       }
     }
@@ -257,15 +270,17 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   if (appleTouchIconEl.length > 0) {
     const href = appleTouchIconEl.attr('href');
     if (href) {
-      const status = await checkIcon(href);
+      const iconResult = await checkIcon(href);
       appleTouchIcon = {
-        href,
+        ...iconResult,
         rel: 'apple-touch-icon',
         sizes: appleTouchIconEl.attr('sizes'),
-        status,
       };
     }
   }
+
+  const appleMobileWebAppTitle =
+    $('meta[name="apple-mobile-web-app-title"]').attr('content') || null;
 
   const manifestEl = $('link[rel="manifest"]');
   let manifest: ManifestResult = {
@@ -296,6 +311,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const brandingResult: BrandingResult = {
     favicons,
     appleTouchIcon,
+    appleMobileWebAppTitle,
     manifest,
   };
 

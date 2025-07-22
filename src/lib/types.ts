@@ -46,32 +46,14 @@ export interface IconResult {
   rel: string;
   type?: string;
   sizes?: string;
+  dimensions?: { width: number; height: number };
   status: 'pass' | 'fail' | 'cors-error';
-}
-
-// Represents the structure of a Web App Manifest icon.
-export interface ManifestIcon {
-  src: string;
-  sizes: string;
-  type: string;
-  purpose?: string;
-}
-
-// Represents the structure of the Web App Manifest content.
-export interface ManifestContent {
-  name?: string;
-  short_name?: string;
-  theme_color?: string;
-  background_color?: string;
-  display?: string;
-  start_url?: string;
-  icons?: ManifestIcon[];
 }
 
 // Represents the analysis of the Web App Manifest.
 export interface ManifestResult {
   found: boolean;
-  content?: ManifestContent;
+  content?: any;
   status: AnalysisStatus;
   recommendation: string;
 }
@@ -80,6 +62,7 @@ export interface ManifestResult {
 export interface BrandingResult {
   favicons: IconResult[];
   appleTouchIcon: IconResult | null;
+  appleMobileWebAppTitle: string | null;
   manifest: ManifestResult;
 }
 
