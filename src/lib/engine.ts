@@ -323,7 +323,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
             status: hasRequiredProperties && hasRequiredIcons ? 'pass' : 'warning',
             recommendation: 'Web app manifest found and is valid JSON.',
           };
-        } catch (e) {
+        } catch {
           manifest.recommendation = 'Web app manifest found but is not valid JSON.';
         }
       }

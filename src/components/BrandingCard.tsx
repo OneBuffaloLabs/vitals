@@ -1,4 +1,4 @@
-import { BrandingResult, IconResult, ManifestContent } from '@/lib/types';
+import { BrandingResult, IconResult } from '@/lib/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheckCircle,
