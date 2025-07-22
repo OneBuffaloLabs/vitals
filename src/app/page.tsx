@@ -1,4 +1,3 @@
-// src/app/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -11,6 +10,7 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import HeaderAnalysisCard from '@/components/HeaderAnalysisCard';
 import ImageAnalysisCard from '@/components/ImageAnalysisCard';
 import FileCheckCard from '@/components/FileCheckCard';
+import Tabs from '@/components/Tabs';
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -47,6 +47,38 @@ export default function Home() {
       setIsLoading(false);
     }
   };
+
+  const tabs = results
+    ? [
+        {
+          label: 'On-Page',
+          content: (
+            <div className='space-y-4'>
+              <ResultCard result={results.title} />
+              <ResultCard result={results.description} />
+              <ResultCard result={results.h1s} />
+              {results.headers.map((headerInfo) => (
+                <HeaderAnalysisCard key={headerInfo.level} headerInfo={headerInfo} />
+              ))}
+              {results.images.totalImages > 0 && <ImageAnalysisCard result={results.images} />}
+            </div>
+          ),
+        },
+        {
+          label: 'Technical',
+          content: (
+            <div className='space-y-4'>
+              <FileCheckCard result={results.robotsTxt} />
+              <FileCheckCard result={results.sitemapXml} />
+            </div>
+          ),
+        },
+        {
+          label: 'Speed',
+          content: <p>Speed analysis coming soon!</p>,
+        },
+      ]
+    : [];
 
   return (
     <div className='w-full max-w-4xl text-center transition-all duration-300'>
@@ -87,19 +119,7 @@ export default function Home() {
             <p>{error}</p>
           </div>
         )}
-        {results && (
-          <div className='space-y-4'>
-            <ResultCard result={results.title} />
-            <ResultCard result={results.description} />
-            <ResultCard result={results.h1s} />
-            {results.headers.map((headerInfo) => (
-              <HeaderAnalysisCard key={headerInfo.level} headerInfo={headerInfo} />
-            ))}
-            {results.images.totalImages > 0 && <ImageAnalysisCard result={results.images} />}
-            <FileCheckCard result={results.robotsTxt} />
-            <FileCheckCard result={results.sitemapXml} />
-          </div>
-        )}
+        {results && <Tabs tabs={tabs} />}
       </div>
     </div>
   );
