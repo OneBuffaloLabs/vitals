@@ -33,7 +33,6 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const $ = load(html);
   const baseUrl = new URL(url).origin;
 
-  // ... (previous analysis steps remain the same)
   // 1. Analyze Title Tag
   const titleText = $('title').text().trim() || null;
   const titleLength = titleText?.length || 0;
@@ -171,7 +170,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
       }
       const data = await res.json();
       return { ok: true, content: data.contents, status: data.status.http_code };
-    } catch (error) {
+    } catch {
       return { ok: false, content: null, status: 0 };
     }
   };
