@@ -32,6 +32,14 @@ export interface ImageAnalysisResult {
   recommendation: string;
 }
 
+// Represents the result of a file check (robots.txt or sitemap.xml).
+export interface FileCheckResult {
+  title: string;
+  found: boolean;
+  content?: string | null;
+  status: AnalysisStatus;
+}
+
 // A collection of all the vital SEO checks for a page.
 export interface PageVitals {
   title: AnalysisResult;
@@ -39,4 +47,6 @@ export interface PageVitals {
   h1s: AnalysisResult;
   headers: HeaderInfo[];
   images: ImageAnalysisResult;
+  robotsTxt: FileCheckResult;
+  sitemapXml: FileCheckResult;
 }

@@ -10,6 +10,7 @@ import ResultCard from '@/components/ResultCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import HeaderAnalysisCard from '@/components/HeaderAnalysisCard';
 import ImageAnalysisCard from '@/components/ImageAnalysisCard';
+import FileCheckCard from '@/components/FileCheckCard';
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -95,6 +96,8 @@ export default function Home() {
               <HeaderAnalysisCard key={headerInfo.level} headerInfo={headerInfo} />
             ))}
             {results.images.totalImages > 0 && <ImageAnalysisCard result={results.images} />}
+            <FileCheckCard result={results.robotsTxt} />
+            <FileCheckCard result={results.sitemapXml} />
           </div>
         )}
       </div>

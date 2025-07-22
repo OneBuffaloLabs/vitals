@@ -3,7 +3,13 @@
  */
 
 import { load } from 'cheerio';
-import { PageVitals, AnalysisResult, HeaderInfo, ImageAnalysisResult } from './types';
+import {
+  PageVitals,
+  AnalysisResult,
+  HeaderInfo,
+  ImageAnalysisResult,
+  FileCheckResult,
+} from './types';
 
 // SEO Best Practices Thresholds
 const TITLE_MIN_LENGTH = 10;
@@ -17,7 +23,6 @@ const DESCRIPTION_MAX_LENGTH = 160;
  * @returns A promise that resolves to a PageVitals object.
  */
 export async function analyzeUrl(url: string): Promise<PageVitals> {
-  // We use a CORS proxy to fetch HTML content on the client-side.
   const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
 
   const response = await fetch(proxyUrl);
@@ -25,8 +30,8 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     throw new Error(`Failed to fetch the URL. Status: ${response.status}`);
   }
   const html = await response.text();
-
   const $ = load(html);
+  const baseUrl = new URL(url).origin;
 
   // 1. Analyze Title Tag
   const titleText = $('title').text().trim() || null;
@@ -151,11 +156,43 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     recommendation: imageRecommendation,
   };
 
+  // 6. Check for robots.txt and sitemap.xml
+  const robotsTxtUrl = `${baseUrl}/robots.txt`;
+  const sitemapXmlUrl = `${baseUrl}/sitemap.xml`;
+
+  const fetchFile = async (fileUrl: string): Promise<FileCheckResult> => {
+    const title = fileUrl.endsWith('robots.txt') ? 'robots.txt' : 'sitemap.xml';
+    try {
+      const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(fileUrl)}`);
+      if (!res.ok) {
+        return { title, found: false, status: 'fail' };
+      }
+      const data = await res.json();
+      // Check the original status code from the target server
+      if (data.status.http_code === 200) {
+        return {
+          title,
+          found: true,
+          content: data.contents,
+          status: 'pass',
+        };
+      }
+      return { title, found: false, status: 'fail' };
+    } catch (error) {
+      return { title, found: false, status: 'fail' };
+    }
+  };
+
+  const robotsTxtResult = await fetchFile(robotsTxtUrl);
+  const sitemapXmlResult = await fetchFile(sitemapXmlUrl);
+
   return {
     title: titleResult,
     description: descriptionResult,
     h1s: h1sResult,
     headers,
     images: imageResult,
+    robotsTxt: robotsTxtResult,
+    sitemapXml: sitemapXmlResult,
   };
 }
