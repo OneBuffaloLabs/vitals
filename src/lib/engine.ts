@@ -213,15 +213,19 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     try {
       const { status } = await fetchFileContent(new URL(href, baseUrl).toString());
       return status === 200 ? 'pass' : 'fail';
-    } catch {
+    } catch (error) {
       return 'cors-error';
     }
   };
 
   const favicons: IconResult[] = [];
-  for (const el of $('link[rel="icon"], link[rel="shortcut icon"]').get()) {
+  const declaredIcons = $('link[rel="icon"], link[rel="shortcut icon"]');
+  const declaredIconHrefs = new Set<string>();
+
+  for (const el of declaredIcons.get()) {
     const href = $(el).attr('href');
     if (!href) continue;
+    declaredIconHrefs.add(href);
     const status = await checkIcon(href);
     favicons.push({
       href,
@@ -230,6 +234,22 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
       sizes: $(el).attr('sizes'),
       status,
     });
+  }
+
+  // Check for conventional, undeclared favicons
+  const conventionalIcons = ['/favicon.ico', '/icon.svg'];
+  for (const iconPath of conventionalIcons) {
+    if (!declaredIconHrefs.has(iconPath)) {
+      const status = await checkIcon(iconPath);
+      if (status === 'pass') {
+        favicons.push({
+          href: iconPath,
+          rel: 'icon (conventional)',
+          type: iconPath.endsWith('.svg') ? 'image/svg+xml' : 'image/x-icon',
+          status,
+        });
+      }
+    }
   }
 
   const appleTouchIconEl = $('link[rel="apple-touch-icon"]');
@@ -266,7 +286,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
             status: 'pass',
             recommendation: 'Web app manifest found and is valid JSON.',
           };
-        } catch {
+        } catch (e) {
           manifest.recommendation = 'Web app manifest found but is not valid JSON.';
         }
       }
