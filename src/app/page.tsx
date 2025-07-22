@@ -59,6 +59,8 @@ export default function Home() {
               <ResultCard result={results.description} />
               <ResultCard result={results.h1s} />
               <ResultCard result={results.canonical} />
+              <ResultCard result={results.lang} />
+              <ResultCard result={results.viewport} />
               {results.headers.map((headerInfo) => (
                 <HeaderAnalysisCard key={headerInfo.level} headerInfo={headerInfo} />
               ))}

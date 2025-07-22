@@ -42,7 +42,6 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const $ = load(html);
   const baseUrl = new URL(url).origin;
 
-  // ... (previous analysis steps remain the same)
   // 1. Analyze Title Tag
   const titleText = $('title').text().trim() || null;
   const titleLength = titleText?.length || 0;
@@ -126,7 +125,31 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
       : 'The page is missing a canonical tag.',
   };
 
-  // 5. Analyze Header Hierarchy (H2-H6)
+  // 5. Language Check
+  const lang = $('html').attr('lang')?.trim() || null;
+  const langResult: AnalysisResult = {
+    title: 'Language',
+    text: lang,
+    length: lang?.length || 0,
+    status: lang ? 'pass' : 'fail',
+    recommendation: lang
+      ? 'The HTML lang attribute is set.'
+      : 'The HTML lang attribute is missing.',
+  };
+
+  // 6. Viewport Check
+  const viewport = $('meta[name="viewport"]').attr('content')?.trim() || null;
+  const viewportResult: AnalysisResult = {
+    title: 'Viewport',
+    text: viewport,
+    length: viewport?.length || 0,
+    status: viewport ? 'pass' : 'fail',
+    recommendation: viewport
+      ? 'A viewport meta tag is present.'
+      : 'The viewport meta tag is missing.',
+  };
+
+  // 7. Analyze Header Hierarchy (H2-H6)
   const headers: HeaderInfo[] = [];
   for (let i = 2; i <= 6; i++) {
     const selector = `h${i}`;
@@ -141,7 +164,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     }
   }
 
-  // 6. Analyze Image Alt Text
+  // 8. Analyze Image Alt Text
   const images = $('img');
   const totalImages = images.length;
   let altTextCount = 0;
@@ -179,7 +202,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     recommendation: imageRecommendation,
   };
 
-  // 7. Check for robots.txt and sitemap.xml
+  // 9. Check for robots.txt and sitemap.xml
   const robotsTxtUrl = `${baseUrl}/robots.txt`;
   const sitemapXmlUrl = `${baseUrl}/sitemap.xml`;
 
@@ -224,7 +247,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const robotsTxtResult = await checkFile(robotsTxtUrl, 'robots.txt');
   const sitemapXmlResult = await checkFile(sitemapXmlUrl, 'sitemap.xml');
 
-  // 8. Branding and Icon Analysis
+  // 10. Branding and Icon Analysis
   const getImageDimensions = (
     imageUrl: string
   ): Promise<{ width: number; height: number } | null> => {
@@ -367,6 +390,8 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     description: descriptionResult,
     h1s: h1sResult,
     canonical: canonicalResult,
+    lang: langResult,
+    viewport: viewportResult,
     headers,
     images: imageResult,
     robotsTxt: robotsTxtResult,
