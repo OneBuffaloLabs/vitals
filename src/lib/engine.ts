@@ -14,6 +14,7 @@ import {
   ManifestResult,
   ManifestContent,
   SocialMetaResult,
+  HeaderAnalysisResult,
 } from './types';
 
 // SEO Best Practices Thresholds
@@ -31,14 +32,14 @@ const PROXIES = ['https://api.allorigins.win/get?url=', 'https://proxy.cors.sh/'
  * @returns A promise that resolves to a PageVitals object.
  */
 export async function analyzeUrl(url: string): Promise<PageVitals> {
-  // Use the raw endpoint for the initial HTML fetch, as it's generally more reliable.
-  const initialProxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-
-  const response = await fetch(initialProxyUrl);
+  const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
   if (!response.ok) {
     throw new Error(`Failed to fetch the URL. Status: ${response.status}`);
   }
-  const html = await response.text();
+  const data = await response.json();
+  const html = data.contents;
+  const headers = data.status;
+
   const $ = load(html);
   const baseUrl = new URL(url).origin;
 
@@ -150,13 +151,13 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   };
 
   // 7. Analyze Header Hierarchy (H2-H6)
-  const headers: HeaderInfo[] = [];
+  const headerHierarchy: HeaderInfo[] = [];
   for (let i = 2; i <= 6; i++) {
     const selector = `h${i}`;
     const elements = $(selector);
     const texts = elements.map((_, el) => $(el).text().trim()).get();
     if (texts.length > 0) {
-      headers.push({
+      headerHierarchy.push({
         level: i,
         text: texts,
         count: texts.length,
@@ -360,7 +361,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
             status: hasRequiredProperties && hasRequiredIcons ? 'pass' : 'warning',
             recommendation: 'Web app manifest found and is valid JSON.',
           };
-        } catch (e) {
+        } catch {
           manifest.recommendation = 'Web app manifest found but is not valid JSON.';
         }
       }
@@ -385,6 +386,12 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     social,
   };
 
+  const httpHeaders: HeaderAnalysisResult = {
+    contentEncoding: headers['content-encoding'] || null,
+    contentSecurityPolicy: headers['content-security-policy'] || null,
+    strictTransportSecurity: headers['strict-transport-security'] || null,
+  };
+
   return {
     title: titleResult,
     description: descriptionResult,
@@ -392,7 +399,8 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     canonical: canonicalResult,
     lang: langResult,
     viewport: viewportResult,
-    headers,
+    headers: headerHierarchy,
+    httpHeaders,
     images: imageResult,
     robotsTxt: robotsTxtResult,
     sitemapXml: sitemapXmlResult,

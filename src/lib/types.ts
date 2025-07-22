@@ -100,6 +100,13 @@ export interface BrandingResult {
   social: SocialMetaResult;
 }
 
+// Represents the analysis of HTTP headers.
+export interface HeaderAnalysisResult {
+  contentEncoding: string | null;
+  contentSecurityPolicy: string | null;
+  strictTransportSecurity: string | null;
+}
+
 // A collection of all the vital SEO checks for a page.
 export interface PageVitals {
   title: AnalysisResult;
@@ -109,6 +116,7 @@ export interface PageVitals {
   lang: AnalysisResult;
   viewport: AnalysisResult;
   headers: HeaderInfo[];
+  httpHeaders: HeaderAnalysisResult;
   images: ImageAnalysisResult;
   robotsTxt: FileCheckResult;
   sitemapXml: FileCheckResult;
