@@ -49,10 +49,29 @@ export interface IconResult {
   status: 'pass' | 'fail' | 'cors-error';
 }
 
+// Represents the structure of a Web App Manifest icon.
+export interface ManifestIcon {
+  src: string;
+  sizes: string;
+  type: string;
+  purpose?: string;
+}
+
+// Represents the structure of the Web App Manifest content.
+export interface ManifestContent {
+  name?: string;
+  short_name?: string;
+  theme_color?: string;
+  background_color?: string;
+  display?: string;
+  start_url?: string;
+  icons?: ManifestIcon[];
+}
+
 // Represents the analysis of the Web App Manifest.
 export interface ManifestResult {
   found: boolean;
-  content?: any;
+  content?: ManifestContent;
   status: AnalysisStatus;
   recommendation: string;
 }

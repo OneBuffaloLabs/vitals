@@ -213,7 +213,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     try {
       const { status } = await fetchFileContent(new URL(href, baseUrl).toString());
       return status === 200 ? 'pass' : 'fail';
-    } catch (error) {
+    } catch {
       return 'cors-error';
     }
   };
@@ -266,7 +266,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
             status: 'pass',
             recommendation: 'Web app manifest found and is valid JSON.',
           };
-        } catch (e) {
+        } catch {
           manifest.recommendation = 'Web app manifest found but is not valid JSON.';
         }
       }
