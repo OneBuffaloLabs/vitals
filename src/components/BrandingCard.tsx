@@ -1,4 +1,4 @@
-import { BrandingResult, IconResult } from '@/lib/types';
+import { BrandingResult, IconResult, ManifestContent } from '@/lib/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheckCircle,
@@ -46,13 +46,15 @@ const IconCheck = ({ icon, label }: { icon: IconResult | null; label: string }) 
   );
 };
 
-const ManifestDetail = ({ label, value }: { label: string; value: string | undefined }) => (
+const MetaDetail = ({ label, value }: { label: string; value: string | null }) => (
   <div className='flex items-center justify-between py-1'>
-    <p className='text-xs text-muted-foreground'>{label}</p>
+    <p className='text-xs text-muted-foreground flex-shrink-0 pr-4'>{label}</p>
     {value ? (
-      <div className='flex items-center gap-2'>
-        <span className='text-xs font-mono'>{value}</span>
-        <FontAwesomeIcon icon={faCheckCircle} className='text-vitals-success' />
+      <div className='flex items-center gap-2 min-w-0'>
+        <span className='text-xs font-mono truncate' title={value}>
+          {value}
+        </span>
+        <FontAwesomeIcon icon={faCheckCircle} className='text-vitals-success flex-shrink-0' />
       </div>
     ) : (
       <FontAwesomeIcon icon={faTimesCircle} className='text-vitals-error' />
@@ -115,12 +117,12 @@ const BrandingCard = ({ result }: { result: BrandingResult }) => {
           </div>
           {result.manifest.found && result.manifest.content && (
             <div className='pl-4 mt-2'>
-              <ManifestDetail label='Name' value={result.manifest.content.name} />
-              <ManifestDetail label='Short Name' value={result.manifest.content.short_name} />
-              <ManifestDetail label='Theme Color' value={result.manifest.content.theme_color} />
-              <ManifestDetail
+              <MetaDetail label='Name' value={result.manifest.content.name || null} />
+              <MetaDetail label='Short Name' value={result.manifest.content.short_name || null} />
+              <MetaDetail label='Theme Color' value={result.manifest.content.theme_color || null} />
+              <MetaDetail
                 label='Background Color'
-                value={result.manifest.content.background_color}
+                value={result.manifest.content.background_color || null}
               />
               <div className='flex items-center justify-between py-1'>
                 <p className='text-xs text-muted-foreground'>Required Icons (192x192, 512x512)</p>
@@ -133,6 +135,16 @@ const BrandingCard = ({ result }: { result: BrandingResult }) => {
               </div>
             </div>
           )}
+        </CollapsibleSection>
+
+        <CollapsibleSection title='Social Sharing'>
+          <MetaDetail label='Open Graph Title' value={result.social.ogTitle} />
+          <MetaDetail label='Open Graph Description' value={result.social.ogDescription} />
+          <MetaDetail label='Open Graph Image' value={result.social.ogImage} />
+          <MetaDetail label='Open Graph URL' value={result.social.ogUrl} />
+          <MetaDetail label='Twitter Card' value={result.social.twitterCard} />
+          <MetaDetail label='Twitter Title' value={result.social.twitterTitle} />
+          <MetaDetail label='Twitter Image' value={result.social.twitterImage} />
         </CollapsibleSection>
       </div>
     </div>

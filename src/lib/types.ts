@@ -80,12 +80,24 @@ export interface ManifestResult {
   recommendation: string;
 }
 
+// Represents the analysis of social meta tags.
+export interface SocialMetaResult {
+  ogTitle: string | null;
+  ogDescription: string | null;
+  ogImage: string | null;
+  ogUrl: string | null;
+  twitterCard: string | null;
+  twitterTitle: string | null;
+  twitterImage: string | null;
+}
+
 // Represents the comprehensive branding analysis.
 export interface BrandingResult {
   favicons: IconResult[];
   appleTouchIcon: IconResult | null;
   appleMobileWebAppTitle: string | null;
   manifest: ManifestResult;
+  social: SocialMetaResult;
 }
 
 // A collection of all the vital SEO checks for a page.

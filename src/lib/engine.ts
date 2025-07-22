@@ -13,6 +13,7 @@ import {
   IconResult,
   ManifestResult,
   ManifestContent,
+  SocialMetaResult,
 } from './types';
 
 // SEO Best Practices Thresholds
@@ -41,6 +42,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const $ = load(html);
   const baseUrl = new URL(url).origin;
 
+  // ... (previous analysis steps remain the same)
   // 1. Analyze Title Tag
   const titleText = $('title').text().trim() || null;
   const titleLength = titleText?.length || 0;
@@ -342,11 +344,22 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     }
   }
 
+  const social: SocialMetaResult = {
+    ogTitle: $('meta[property="og:title"]').attr('content') || null,
+    ogDescription: $('meta[property="og:description"]').attr('content') || null,
+    ogImage: $('meta[property="og:image"]').attr('content') || null,
+    ogUrl: $('meta[property="og:url"]').attr('content') || null,
+    twitterCard: $('meta[name="twitter:card"]').attr('content') || null,
+    twitterTitle: $('meta[name="twitter:title"]').attr('content') || null,
+    twitterImage: $('meta[name="twitter:image"]').attr('content') || null,
+  };
+
   const brandingResult: BrandingResult = {
     favicons,
     appleTouchIcon,
     appleMobileWebAppTitle,
     manifest,
+    social,
   };
 
   return {
