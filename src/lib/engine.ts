@@ -12,6 +12,7 @@ import {
   BrandingResult,
   IconResult,
   ManifestResult,
+  ManifestContent,
 } from './types';
 
 // SEO Best Practices Thresholds
@@ -285,6 +286,8 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const manifestEl = $('link[rel="manifest"]');
   let manifest: ManifestResult = {
     found: false,
+    hasRequiredProperties: false,
+    hasRequiredIcons: false,
     status: 'fail',
     recommendation: 'No web app manifest found.',
   };
@@ -294,11 +297,30 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
       const { content, status } = await fetchFileContent(new URL(href, baseUrl).toString());
       if (status === 200 && content) {
         try {
-          const manifestJson = JSON.parse(content);
+          const manifestJson: ManifestContent = JSON.parse(content);
+          const hasRequiredProperties = !!(
+            manifestJson.name &&
+            manifestJson.short_name &&
+            manifestJson.theme_color &&
+            manifestJson.background_color
+          );
+          const has192Icon = manifestJson.icons?.some((icon) => icon.sizes === '192x192');
+          const has512Icon = manifestJson.icons?.some((icon) => icon.sizes === '512x512');
+          const hasRequiredIcons = !!(has192Icon && has512Icon);
+
+          if (manifestJson.icons) {
+            for (const icon of manifestJson.icons) {
+              const { status } = await fetchFileContent(new URL(icon.src, baseUrl).toString());
+              icon.accessible = status === 200;
+            }
+          }
+
           manifest = {
             found: true,
             content: manifestJson,
-            status: 'pass',
+            hasRequiredProperties,
+            hasRequiredIcons,
+            status: hasRequiredProperties && hasRequiredIcons ? 'pass' : 'warning',
             recommendation: 'Web app manifest found and is valid JSON.',
           };
         } catch (e) {
