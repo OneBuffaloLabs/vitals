@@ -6,6 +6,7 @@
     "dev": "next dev",
     "dev:turbo": "next dev --turbopack",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
     "serve": "serve out"
@@ -29,6 +30,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.2",
+    "next-sitemap": "^4.2.3",
     "postcss": "^8.5.6",
     "serve": "^14.2.4",
     "tailwindcss": "^4.1.11",
