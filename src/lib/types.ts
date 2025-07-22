@@ -93,6 +93,7 @@ export interface PageVitals {
   title: AnalysisResult;
   description: AnalysisResult;
   h1s: AnalysisResult;
+  canonical: AnalysisResult;
   headers: HeaderInfo[];
   images: ImageAnalysisResult;
   robotsTxt: FileCheckResult;

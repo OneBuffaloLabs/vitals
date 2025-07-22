@@ -41,7 +41,6 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const $ = load(html);
   const baseUrl = new URL(url).origin;
 
-  // ... (previous analysis steps remain the same)
   // 1. Analyze Title Tag
   const titleText = $('title').text().trim() || null;
   const titleLength = titleText?.length || 0;
@@ -112,7 +111,20 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     recommendation: h1Recommendation,
   };
 
-  // 4. Analyze Header Hierarchy (H2-H6)
+  // 4. Canonical Tag Check
+  const canonicalEl = $('link[rel="canonical"]');
+  const canonicalUrl = canonicalEl.attr('href')?.trim() || null;
+  const canonicalResult: AnalysisResult = {
+    title: 'Canonical Tag',
+    text: canonicalUrl,
+    length: canonicalUrl?.length || 0,
+    status: canonicalUrl ? 'pass' : 'fail',
+    recommendation: canonicalUrl
+      ? 'A canonical tag is present.'
+      : 'The page is missing a canonical tag.',
+  };
+
+  // 5. Analyze Header Hierarchy (H2-H6)
   const headers: HeaderInfo[] = [];
   for (let i = 2; i <= 6; i++) {
     const selector = `h${i}`;
@@ -127,7 +139,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     }
   }
 
-  // 5. Analyze Image Alt Text
+  // 6. Analyze Image Alt Text
   const images = $('img');
   const totalImages = images.length;
   let altTextCount = 0;
@@ -165,7 +177,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     recommendation: imageRecommendation,
   };
 
-  // 6. Check for robots.txt and sitemap.xml
+  // 7. Check for robots.txt and sitemap.xml
   const robotsTxtUrl = `${baseUrl}/robots.txt`;
   const sitemapXmlUrl = `${baseUrl}/sitemap.xml`;
 
@@ -210,7 +222,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const robotsTxtResult = await checkFile(robotsTxtUrl, 'robots.txt');
   const sitemapXmlResult = await checkFile(sitemapXmlUrl, 'sitemap.xml');
 
-  // 7. Branding and Icon Analysis
+  // 8. Branding and Icon Analysis
   const getImageDimensions = (
     imageUrl: string
   ): Promise<{ width: number; height: number } | null> => {
@@ -323,7 +335,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
             status: hasRequiredProperties && hasRequiredIcons ? 'pass' : 'warning',
             recommendation: 'Web app manifest found and is valid JSON.',
           };
-        } catch {
+        } catch (e) {
           manifest.recommendation = 'Web app manifest found but is not valid JSON.';
         }
       }
@@ -341,6 +353,7 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     title: titleResult,
     description: descriptionResult,
     h1s: h1sResult,
+    canonical: canonicalResult,
     headers,
     images: imageResult,
     robotsTxt: robotsTxtResult,
