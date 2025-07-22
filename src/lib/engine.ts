@@ -9,7 +9,6 @@ import {
   HeaderInfo,
   ImageAnalysisResult,
   FileCheckResult,
-  SitemapInfo,
 } from './types';
 
 // SEO Best Practices Thresholds
@@ -35,7 +34,6 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const baseUrl = new URL(url).origin;
 
   // ... (previous analysis steps remain the same)
-
   // 1. Analyze Title Tag
   const titleText = $('title').text().trim() || null;
   const titleLength = titleText?.length || 0;
@@ -166,51 +164,31 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const fetchFileContent = async (
     fileUrl: string
   ): Promise<{ ok: boolean; content: string | null; status: number }> => {
-    const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(fileUrl)}`);
-    if (!res.ok) return { ok: false, content: null, status: res.status };
-    const data = await res.json();
-    return { ok: true, content: data.contents, status: data.status.http_code };
+    try {
+      const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(fileUrl)}`);
+      if (!res.ok) {
+        return { ok: false, content: null, status: res.status };
+      }
+      const data = await res.json();
+      return { ok: true, content: data.contents, status: data.status.http_code };
+    } catch (error) {
+      return { ok: false, content: null, status: 0 };
+    }
   };
 
-  const checkRobotsTxt = async (): Promise<FileCheckResult> => {
-    const { content, status } = await fetchFileContent(robotsTxtUrl);
+  const checkFile = async (fileUrl: string, title: string): Promise<FileCheckResult> => {
+    const { content, status } = await fetchFileContent(fileUrl);
     const found = status === 200;
     return {
-      title: 'robots.txt',
-      found: found,
+      title,
+      found,
       content: found ? content : null,
       status: found ? 'pass' : 'fail',
     };
   };
 
-  const checkSitemapXml = async (): Promise<FileCheckResult> => {
-    const { content, status } = await fetchFileContent(sitemapXmlUrl);
-    const found = status === 200 && !!content;
-
-    if (found && content.includes('<sitemapindex')) {
-      const $sitemap = load(content, { xmlMode: true });
-      const sitemapUrls = $sitemap('loc')
-        .map((_, el) => $sitemap(el).text())
-        .get();
-      const sitemaps: SitemapInfo[] = await Promise.all(
-        sitemapUrls.map(async (sitemapUrl) => {
-          const { content: sitemapContent } = await fetchFileContent(sitemapUrl);
-          return { loc: sitemapUrl, content: sitemapContent };
-        })
-      );
-      return { title: 'sitemap.xml', found: true, sitemaps, status: 'pass' };
-    }
-
-    return {
-      title: 'sitemap.xml',
-      found: found,
-      content: found ? content : null,
-      status: found ? 'pass' : 'fail',
-    };
-  };
-
-  const robotsTxtResult = await checkRobotsTxt();
-  const sitemapXmlResult = await checkSitemapXml();
+  const robotsTxtResult = await checkFile(robotsTxtUrl, 'robots.txt');
+  const sitemapXmlResult = await checkFile(sitemapXmlUrl, 'sitemap.xml');
 
   return {
     title: titleResult,

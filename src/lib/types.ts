@@ -32,18 +32,11 @@ export interface ImageAnalysisResult {
   recommendation: string;
 }
 
-// Represents a single sitemap within a sitemap index.
-export interface SitemapInfo {
-  loc: string;
-  content: string | null;
-}
-
 // Represents the result of a file check (robots.txt or sitemap.xml).
 export interface FileCheckResult {
   title: string;
   found: boolean;
   content?: string | null;
-  sitemaps?: SitemapInfo[];
   status: AnalysisStatus;
 }
 
