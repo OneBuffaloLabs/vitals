@@ -40,6 +40,30 @@ export interface FileCheckResult {
   status: AnalysisStatus;
 }
 
+// Represents the analysis of a single icon.
+export interface IconResult {
+  href: string;
+  rel: string;
+  type?: string;
+  sizes?: string;
+  status: 'pass' | 'fail' | 'cors-error';
+}
+
+// Represents the analysis of the Web App Manifest.
+export interface ManifestResult {
+  found: boolean;
+  content?: any;
+  status: AnalysisStatus;
+  recommendation: string;
+}
+
+// Represents the comprehensive branding analysis.
+export interface BrandingResult {
+  favicons: IconResult[];
+  appleTouchIcon: IconResult | null;
+  manifest: ManifestResult;
+}
+
 // A collection of all the vital SEO checks for a page.
 export interface PageVitals {
   title: AnalysisResult;
@@ -49,4 +73,5 @@ export interface PageVitals {
   images: ImageAnalysisResult;
   robotsTxt: FileCheckResult;
   sitemapXml: FileCheckResult;
+  branding: BrandingResult;
 }

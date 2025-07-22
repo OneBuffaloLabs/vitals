@@ -9,6 +9,9 @@ import {
   HeaderInfo,
   ImageAnalysisResult,
   FileCheckResult,
+  BrandingResult,
+  IconResult,
+  ManifestResult,
 } from './types';
 
 // SEO Best Practices Thresholds
@@ -17,15 +20,19 @@ const TITLE_MAX_LENGTH = 60;
 const DESCRIPTION_MIN_LENGTH = 50;
 const DESCRIPTION_MAX_LENGTH = 160;
 
+// List of CORS proxies to rotate through for better reliability
+const PROXIES = ['https://api.allorigins.win/get?url=', 'https://proxy.cors.sh/'];
+
 /**
  * Fetches and analyzes the on-page SEO vitals of a given URL.
  * @param url The URL to analyze.
  * @returns A promise that resolves to a PageVitals object.
  */
 export async function analyzeUrl(url: string): Promise<PageVitals> {
-  const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+  // Use the raw endpoint for the initial HTML fetch, as it's generally more reliable.
+  const initialProxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
 
-  const response = await fetch(proxyUrl);
+  const response = await fetch(initialProxyUrl);
   if (!response.ok) {
     throw new Error(`Failed to fetch the URL. Status: ${response.status}`);
   }
@@ -163,16 +170,28 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const fetchFileContent = async (
     fileUrl: string
   ): Promise<{ ok: boolean; content: string | null; status: number }> => {
-    try {
-      const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(fileUrl)}`);
-      if (!res.ok) {
-        return { ok: false, content: null, status: res.status };
+    for (const proxy of PROXIES) {
+      try {
+        const requestUrl = proxy.includes('?')
+          ? `${proxy}${encodeURIComponent(fileUrl)}`
+          : `${proxy}${fileUrl}`;
+        const res = await fetch(requestUrl);
+
+        if (!res.ok) continue;
+
+        if (proxy.includes('allorigins.win')) {
+          const data = await res.json();
+          return { ok: true, content: data.contents, status: data.status.http_code };
+        } else {
+          const content = await res.text();
+          return { ok: true, content, status: res.status };
+        }
+      } catch (error) {
+        console.warn(`Proxy ${proxy} failed for ${fileUrl}`, error);
+        continue;
       }
-      const data = await res.json();
-      return { ok: true, content: data.contents, status: data.status.http_code };
-    } catch {
-      return { ok: false, content: null, status: 0 };
     }
+    return { ok: false, content: null, status: 0 };
   };
 
   const checkFile = async (fileUrl: string, title: string): Promise<FileCheckResult> => {
@@ -189,6 +208,77 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
   const robotsTxtResult = await checkFile(robotsTxtUrl, 'robots.txt');
   const sitemapXmlResult = await checkFile(sitemapXmlUrl, 'sitemap.xml');
 
+  // 7. Branding and Icon Analysis
+  const checkIcon = async (href: string): Promise<IconResult['status']> => {
+    try {
+      const { status } = await fetchFileContent(new URL(href, baseUrl).toString());
+      return status === 200 ? 'pass' : 'fail';
+    } catch (error) {
+      return 'cors-error';
+    }
+  };
+
+  const favicons: IconResult[] = [];
+  for (const el of $('link[rel="icon"], link[rel="shortcut icon"]').get()) {
+    const href = $(el).attr('href');
+    if (!href) continue;
+    const status = await checkIcon(href);
+    favicons.push({
+      href,
+      rel: $(el).attr('rel') || '',
+      type: $(el).attr('type'),
+      sizes: $(el).attr('sizes'),
+      status,
+    });
+  }
+
+  const appleTouchIconEl = $('link[rel="apple-touch-icon"]');
+  let appleTouchIcon: IconResult | null = null;
+  if (appleTouchIconEl.length > 0) {
+    const href = appleTouchIconEl.attr('href');
+    if (href) {
+      const status = await checkIcon(href);
+      appleTouchIcon = {
+        href,
+        rel: 'apple-touch-icon',
+        sizes: appleTouchIconEl.attr('sizes'),
+        status,
+      };
+    }
+  }
+
+  const manifestEl = $('link[rel="manifest"]');
+  let manifest: ManifestResult = {
+    found: false,
+    status: 'fail',
+    recommendation: 'No web app manifest found.',
+  };
+  if (manifestEl.length > 0) {
+    const href = manifestEl.attr('href');
+    if (href) {
+      const { content, status } = await fetchFileContent(new URL(href, baseUrl).toString());
+      if (status === 200 && content) {
+        try {
+          const manifestJson = JSON.parse(content);
+          manifest = {
+            found: true,
+            content: manifestJson,
+            status: 'pass',
+            recommendation: 'Web app manifest found and is valid JSON.',
+          };
+        } catch (e) {
+          manifest.recommendation = 'Web app manifest found but is not valid JSON.';
+        }
+      }
+    }
+  }
+
+  const brandingResult: BrandingResult = {
+    favicons,
+    appleTouchIcon,
+    manifest,
+  };
+
   return {
     title: titleResult,
     description: descriptionResult,
@@ -197,5 +287,6 @@ export async function analyzeUrl(url: string): Promise<PageVitals> {
     images: imageResult,
     robotsTxt: robotsTxtResult,
     sitemapXml: sitemapXmlResult,
+    branding: brandingResult,
   };
 }
