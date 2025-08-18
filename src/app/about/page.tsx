@@ -24,9 +24,10 @@ export default function AboutPage() {
 
         <h2 className='text-2xl font-bold text-vitals-primary pt-4'>Our Privacy-First Approach</h2>
         <p>
-          The "client-side" aspect is what makes Vitals special. It means that when you enter a URL,
-          all analysis happens directly in your browser. We do not collect, store, or track the URLs
-          you analyze, and we do not save the results. This approach offers two huge benefits:
+          The &quot;client-side&quot; aspect is what makes Vitals special. It means that when you
+          enter a URL, all analysis happens directly in your browser. We do not collect, store, or
+          track the URLs you analyze, and we do not save the results. This approach offers two huge
+          benefits:
         </p>
         <ul className='list-disc list-inside space-y-2 pl-4'>
           <li>
