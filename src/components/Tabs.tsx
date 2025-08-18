@@ -26,7 +26,7 @@ const Tabs = ({ tabs }: TabsProps) => {
                 activeTab === index
                   ? 'border-vitals-accent text-vitals-primary'
                   : 'border-transparent text-muted-foreground hover:text-vitals-primary hover:border-gray-300'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg`}>
+              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg cursor-pointer transition-colors`}>
               {tab.label}
             </button>
           ))}

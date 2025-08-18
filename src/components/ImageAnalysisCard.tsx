@@ -62,7 +62,7 @@ const ImageAnalysisCard = ({ result }: { result: ImageAnalysisResult }) => {
         <div className='mt-3'>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className='text-sm font-semibold text-vitals-accent'>
+            className='text-sm font-semibold text-vitals-accent cursor-pointer'>
             {isOpen ? 'Hide' : 'Show'} Missing ({result.missingAltTextImages.length})
             <FontAwesomeIcon icon={isOpen ? faChevronUp : faChevronDown} className='ml-2 h-4 w-4' />
           </button>

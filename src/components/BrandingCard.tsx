@@ -69,7 +69,7 @@ const CollapsibleSection = ({ title, children }: { title: string; children: Reac
     <div className='py-2 border-b'>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className='w-full flex items-center justify-between text-left'>
+        className='w-full flex items-center justify-between text-left cursor-pointer'>
         <h4 className='font-semibold text-vitals-primary'>{title}</h4>
         <FontAwesomeIcon
           icon={isOpen ? faChevronUp : faChevronDown}
