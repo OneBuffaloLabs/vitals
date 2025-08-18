@@ -1,10 +1,13 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+// --- Utils ---
+import { generateMetadata } from '@/utils/metadata';
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy | Vitals by One Buffalo Labs',
+export const metadata: Metadata = generateMetadata({
+  title: 'Privacy Policy',
   description: 'Learn about how Vitals handles your data and respects your privacy.',
-};
+  urlPath: '/privacy',
+});
 
 export default function PrivacyPolicyPage() {
   return (

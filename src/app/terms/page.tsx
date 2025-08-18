@@ -1,10 +1,13 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+// --- Utils ---
+import { generateMetadata } from '@/utils/metadata';
 
-export const metadata: Metadata = {
-  title: 'Terms of Service | Vitals by One Buffalo Labs',
+export const metadata: Metadata = generateMetadata({
+  title: 'Terms of Service',
   description: 'Read the Terms of Service for using the Vitals SEO analysis tool.',
-};
+  urlPath: '/terms',
+});
 
 export default function TermsOfServicePage() {
   return (

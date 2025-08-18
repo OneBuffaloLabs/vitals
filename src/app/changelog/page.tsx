@@ -1,9 +1,12 @@
 import { Metadata } from 'next';
+// --- Utils ---
+import { generateMetadata } from '@/utils/metadata';
 
-export const metadata: Metadata = {
-  title: 'Changelog | Vitals by One Buffalo Labs',
+export const metadata: Metadata = generateMetadata({
+  title: 'Changelog',
   description: 'View the history of changes and new features for the Vitals SEO analysis tool.',
-};
+  urlPath: '/changelog',
+});
 
 export default function ChangelogPage() {
   return (
