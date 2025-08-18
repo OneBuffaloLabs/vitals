@@ -17,6 +17,9 @@ const Footer = () => {
 
         {/* Navigation Links */}
         <div className='flex items-center gap-4'>
+          <Link href='/about' className='hover:text-vitals-accent transition-colors'>
+            About
+          </Link>
           <Link href='/privacy' className='hover:text-vitals-accent transition-colors'>
             Privacy
           </Link>
