@@ -3,32 +3,21 @@
   "short_name": "Vitals",
   "description": "Instantly analyze your website's on-page and technical SEO with Vitals. Our free, client-side tool checks titles, headers, alt text, and more—all without storing your data.",
   "start_url": "/",
-  "display": "standalone",
-  "background_color": "#f7f8f9",
-  "theme_color": "#f7f8f9",
   "icons": [
-    {
-      "src": "/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    },
     {
       "src": "/web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "/web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/web-app-manifest-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "theme_color": "#FFFFFF",
+  "background_color": "#FFFFFF",
+  "display": "standalone"
 }
