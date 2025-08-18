@@ -12,7 +12,16 @@ const Footer = () => {
       <div className='flex flex-col sm:flex-row items-center justify-between max-w-4xl mx-auto text-sm text-muted-foreground'>
         {/* Copyright Info */}
         <div className='mb-4 sm:mb-0'>
-          <span>© {copyrightDate} One Buffalo Labs</span>
+          <span>
+            © {copyrightDate}{' '}
+            <a
+              href='https://onebuffalolabs.com'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='hover:text-vitals-accent transition-colors'>
+              One Buffalo Labs
+            </a>
+          </span>
         </div>
 
         {/* Navigation Links */}
