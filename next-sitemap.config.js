@@ -2,6 +2,7 @@
 module.exports = {
   siteUrl: 'https://vitals.onebuffalolabs.com',
   generateRobotsTxt: true,
+  trailingSlash: true,
   robotsTxtOptions: {
     policies: [
       {
@@ -12,4 +13,3 @@ module.exports = {
   },
   outDir: './out',
 };
-
